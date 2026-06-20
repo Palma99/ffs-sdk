@@ -1,6 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {  FeatureFlagService, getFFS } from "./sdk";
 
+const initOptions = {
+  environmentKey: "test",
+  baseUrl: "https://flags.example.com/public/v1",
+}
+
 const fetchActiveFlagsSpy = vi.fn().mockResolvedValue(['flag1', 'flag2', 'flag3']);
 
 vi.mock("./client", () => ({
@@ -16,8 +21,8 @@ describe("FeatureFlagService", () => {
 
   it("should throw an error if already initialized", () => {
     expect(() => {
-      FeatureFlagService.init({ environmentKey: "test" });
-      FeatureFlagService.init({ environmentKey: "test" });
+      FeatureFlagService.init(initOptions);
+      FeatureFlagService.init(initOptions);
     }).toThrowError("FeatureFlagService is already initialized");
   });
 });
@@ -34,7 +39,7 @@ describe("getFFS", () => {
   });
 
   it("should return the instance when initialized", async () => {
-    FeatureFlagService.init({ environmentKey: "test" });
+    FeatureFlagService.init(initOptions);
     const ffs = getFFS();
     expect(ffs).toBeInstanceOf(FeatureFlagService);
   });
@@ -49,7 +54,7 @@ describe("getActiveFlags", () => {
   it("should fetch remote active flags after initialization", async () => {
     expect(fetchActiveFlagsSpy).not.toHaveBeenCalled();
 
-    FeatureFlagService.init({ environmentKey: "test" });
+    FeatureFlagService.init(initOptions);
     await getFFS().getActiveFlags();
 
     expect(fetchActiveFlagsSpy).toHaveBeenCalled();
@@ -57,7 +62,7 @@ describe("getActiveFlags", () => {
 
   it("should return cached active flags", async () => {
     vi.useFakeTimers()
-    FeatureFlagService.init({ environmentKey: "test" });
+    FeatureFlagService.init(initOptions);
 
     await getFFS().getActiveFlags();
     await getFFS().getActiveFlags();

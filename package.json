@@ -1,19 +1,52 @@
 {
-  "name": "ffs-sdk",
-  "private": true,
-  "version": "0.0.0",
+  "name": "@palma99/ffs-sdk",
+  "version": "0.1.0",
+  "description": "A lightweight TypeScript SDK for Feature Flag Service.",
   "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
   "scripts": {
     "build": "tsc && vite build",
     "test": "vitest",
+    "test:run": "vitest run",
+    "prepublishOnly": "npm run test:run && npm run build",
     "dev": "vite"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Palma99/ffs-sdk.git"
+  },
+  "homepage": "https://github.com/Palma99/ffs-sdk#readme",
+  "bugs": {
+    "url": "https://github.com/Palma99/ffs-sdk/issues"
+  },
+  "author": "Palma99",
+  "license": "MIT",
+  "keywords": [
+    "feature-flags",
+    "feature-toggle",
+    "sdk",
+    "typescript"
+  ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   },
   "devDependencies": {
     "typescript": "~5.6.2",
     "vite": "^6.0.1",
-    "vite-plugin-dts": "^4.3.0"
-  },
-  "dependencies": {
+    "vite-plugin-dts": "^4.3.0",
     "vitest": "^2.1.8"
   }
 }

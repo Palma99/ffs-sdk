@@ -1,13 +1,14 @@
-import { getAppConfig } from "./config/AppConfig"
-import { CachedResource } from "./CachedResource"
-
 export class FeatureFlagServiceClient {
-  public activeFlags = new CachedResource(() => this.fetchActiveFlags(), 10000)
-  
-  constructor(private environmentKey: string) {}
+  constructor(
+    private environmentKey: string,
+    private baseUrl: string,
+  ) {}
 
   private urlWithPublicKey(endpoint: string): string {
-    return `${getAppConfig().baseUrl}/${endpoint}?public_key=${this.environmentKey}`
+    const normalizedBaseUrl = this.baseUrl.replace(/\/+$/, "")
+    const publicKey = encodeURIComponent(this.environmentKey)
+
+    return `${normalizedBaseUrl}/${endpoint}?public_key=${publicKey}`
   }
 
   async fetchActiveFlags(): Promise<string[]> {

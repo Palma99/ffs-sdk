@@ -17,8 +17,8 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "src/global.d.ts"]
+  "include": ["src"],
+  "exclude": ["src/**/*.test.ts"]
 }

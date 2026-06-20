@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { CachedResource } from "./CachedResource";
 
-describe.only("CachedResource", () => {
+describe("CachedResource", () => {
   it("should call the loader and return the value", async () => {
     vi.useFakeTimers()
     const loaderSpy = vi.fn().mockResolvedValue("test")
@@ -19,6 +19,18 @@ describe.only("CachedResource", () => {
     expect(await cachedResource.getValue()).toBe("test")
 
     expect(loaderSpy).toHaveBeenCalledTimes(1)
+    vi.useRealTimers()
+  })
+
+  it("should cache falsy values", async () => {
+    vi.useFakeTimers()
+    const loaderSpy = vi.fn().mockResolvedValue("")
+    const cachedResource = new CachedResource(loaderSpy, 10000)
+
+    expect(await cachedResource.getValue()).toBe("")
+    expect(await cachedResource.getValue()).toBe("")
+    expect(loaderSpy).toHaveBeenCalledTimes(1)
+
     vi.useRealTimers()
   })
 

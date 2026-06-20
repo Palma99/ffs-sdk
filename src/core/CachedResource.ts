@@ -12,7 +12,7 @@ export class CachedResource<T> {
   }
 
   public async getValue(refresh = false): Promise<T> {
-    if (!this.isExpired && this.value && !refresh) {
+    if (!this.isExpired && this.value !== null && !refresh) {
       return this.value;
     }
 

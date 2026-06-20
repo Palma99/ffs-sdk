@@ -8,17 +8,18 @@ vi.stubGlobal('fetch', vi.fn().mockResolvedValue(
   }
 ));
 
-vi.stubEnv('VITE_API_PUBLIC_URL', 'feature_flag_service_api_url')
-
 describe('FeatureFlagServiceClient', () => {
 
   describe('fetchActiveFlags', () => {
     it('call the correct endpoint with the public key', async () => {
-      const client = new FeatureFlagServiceClient('test')
+      const client = new FeatureFlagServiceClient(
+        'test key',
+        'https://flags.example.com/public/v1/',
+      )
       await client.fetchActiveFlags()
 
       expect(fetch).toHaveBeenCalledWith(
-        'feature_flag_service_api_url/flags?public_key=test',
+        'https://flags.example.com/public/v1/flags?public_key=test%20key',
       )
     })
     

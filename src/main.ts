@@ -1,6 +1,5 @@
-import { FeatureFlagService, getFFS } from "./core/sdk";
-
 export {
   FeatureFlagService,
-  getFFS
-}
+  getFFS,
+  type InitOptions,
+} from "./core/sdk";

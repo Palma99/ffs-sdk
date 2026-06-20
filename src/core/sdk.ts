@@ -1,8 +1,12 @@
 import { CachedResource } from "./CachedResource"
 import { FeatureFlagServiceClient } from "./client"
 
-type InitOptions = {
+const DEFAULT_CACHE_TIME_MS = 10_000
+
+export type InitOptions = {
   environmentKey: string
+  baseUrl: string
+  cacheTimeMs?: number
 }
 
 export class FeatureFlagService {
@@ -10,11 +14,11 @@ export class FeatureFlagService {
   private activeFlags: CachedResource<string[]>
   private client: FeatureFlagServiceClient
 
-  static destroy() {
+  static destroy(): void {
     FeatureFlagService.instance = null
-  }  
+  }
 
-  static init(options: InitOptions) {
+  static init(options: InitOptions): void {
     if (!FeatureFlagService.instance) {
       FeatureFlagService.instance = new FeatureFlagService(options)
       return
@@ -24,10 +28,15 @@ export class FeatureFlagService {
   }
 
   private constructor(private options: InitOptions) {
-    this.client = new FeatureFlagServiceClient(this.options.environmentKey)
+    const cacheTimeMs = this.options.cacheTimeMs ?? DEFAULT_CACHE_TIME_MS
+
+    this.client = new FeatureFlagServiceClient(
+      this.options.environmentKey,
+      this.options.baseUrl,
+    )
     this.activeFlags = new CachedResource(
       () => this.client.fetchActiveFlags(),
-      10000
+      cacheTimeMs,
     )
   }
 
@@ -48,7 +57,6 @@ export class FeatureFlagService {
   }
 }
 
-// export const getFFS: () => FeatureFlagService = FeatureFlagService.getInstance
 export function getFFS(): FeatureFlagService {
   return FeatureFlagService.getInstance()
 }

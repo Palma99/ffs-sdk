@@ -6,13 +6,16 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, "src/main.ts"),
-      name: "FFS-SDK",
-      fileName: "ffs-sdk",
+      formats: ["es", "cjs"],
+      fileName: (format) => format === "es" ? "index.js" : "index.cjs",
     },
   },
   plugins: [
     dts({
-      insertTypesEntry: true, // Genera un file entry per i tipi
+      include: ["src"],
+      exclude: ["src/**/*.test.ts"],
+      insertTypesEntry: true,
+      rollupTypes: true,
     }),
   ],
 });
